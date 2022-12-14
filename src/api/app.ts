@@ -1,6 +1,11 @@
 import express from 'express';
 import { AppDataSource } from "../database/data-source";
-import { RoleRoute, ContractTypeRoute } from '../routes';
+import {
+  RoleRoute,
+  ContractTypeRoute,
+  ContractRoute,
+  CostCenterRoute
+} from '../routes';
 
 class App {
   public express: express.Application;
@@ -20,6 +25,8 @@ class App {
     this.express.use('/api-test', (_req, res) => res.send('Hello world'));
     this.express.use('/role', RoleRoute);
     this.express.use('/contractType', ContractTypeRoute);
+    this.express.use('/contract', ContractRoute);
+    this.express.use('/costCenter', CostCenterRoute);
   };
 
   private async database() {

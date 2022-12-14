@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, OneToOne, JoinColumn } from "typeorm";
 import { User } from "./User";
-import { ContractType } from "./ContractType";
+import { Customer } from './Customer';
 
 @Entity()
 export class CostCenter {
@@ -11,22 +11,12 @@ export class CostCenter {
   @Column()
   name: string;
 
-  @OneToOne(() => ContractType, contractType => contractType.type)
-  @JoinColumn()
-  contract_type: ContractType;
-
-  @Column()
-  contract_status: string;
-
-  @Column()
-  contract_start: Date;
-
-  @Column({ type: 'date', nullable: true})
-  contract_end: Date;
-
   @Column({ type: 'decimal' })
-  monthly_budget: number
+  monthlyBudget: number
 
   @ManyToOne(() => User, user => user.costCenter)
   user: User;
+
+  @ManyToOne(() => Customer, customer => customer.costCenter)
+  customer: Customer;
 };

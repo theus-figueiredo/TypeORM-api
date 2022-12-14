@@ -22,9 +22,9 @@ export class User {
 
   @OneToOne(() => Role, role => role.role)
   @JoinColumn()
-  role: Role;
+  role: Role | null
 
   @OneToMany(() => CostCenter, costCenter => costCenter.user)
   @JoinColumn()
-  costCenter: CostCenter[];
+  costCenter: CostCenter[] | null;
 };
