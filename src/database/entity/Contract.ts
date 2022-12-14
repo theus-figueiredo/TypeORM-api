@@ -26,10 +26,10 @@ export class Contract {
   @Column()
   description: string;
 
-  @OneToOne(() => ContractType, contractType => contractType.type)
+  @OneToOne(() => ContractType, contractType => contractType.type, { cascade: true })
   @JoinColumn()
-  contractType: ContractType
+  contractType: ContractType | null
 
   @OneToOne(() => Customer, customer => customer.contract)
-  customer: Customer
+  customer: Customer | null
 };

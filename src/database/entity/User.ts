@@ -20,11 +20,11 @@ export class User {
   @Column()
   password: string;
 
-  @OneToOne(() => Role, role => role.role)
+  @OneToOne(() => Role, role => role.role, { cascade: true })
   @JoinColumn()
   role: Role | null
 
-  @OneToMany(() => CostCenter, costCenter => costCenter.user)
+  @OneToMany(() => CostCenter, costCenter => costCenter.user, { cascade: true })
   @JoinColumn()
   costCenter: CostCenter[] | null;
 };

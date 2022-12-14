@@ -3,6 +3,12 @@ import ContractController from '../controller/ContractController';
 
 const router = Router();
 
-router.patch('/:id', ContractController.updateContract);
+router.post('/', ContractController.store);
+router.get('/', ContractController.getAll);
+router.get('/:id', ContractController.getById);
+router.patch('/update/:id', ContractController.update);
+router.patch('/assign/type/:id', ContractController.assignType);
+router.patch('/remove/type/:id', ContractController.removeType);
+router.delete('/delete/:id', ContractController.remove);
 
 export default router;

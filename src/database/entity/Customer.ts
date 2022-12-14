@@ -11,11 +11,11 @@ export class Customer {
   @Column()
   name: string;
 
-  @OneToMany(() => CostCenter, costCenter => costCenter.customer)
+  @OneToMany(() => CostCenter, costCenter => costCenter.customer, { cascade: true })
   @JoinColumn()
   costCenter: CostCenter[];
 
-  @OneToOne(() => Contract, contract => contract.customer)
+  @OneToOne(() => Contract, contract => contract.id, { cascade: true })
   @JoinColumn()
   contract: Contract;
 };

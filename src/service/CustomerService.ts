@@ -24,7 +24,6 @@ class CustomerService {
         return false;
       };
     };
-
     return true;
   };
   
@@ -100,6 +99,7 @@ class CustomerService {
     await customerRepository.save(customer);
     return { couldExecute: true, customer };
   };
+
 
   public async updateContract(id: number, newContractId: number): Promise<ICustomerDTO> {
     const newContract = await contractRepository.findOneBy({ id: newContractId });
