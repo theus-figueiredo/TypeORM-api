@@ -8,6 +8,7 @@ class StatusService {
     const newStatus = new ServiceStatus();
     newStatus.status = status;
 
+    await serviceStatusRepo.save(newStatus);
     return newStatus;
   };
 

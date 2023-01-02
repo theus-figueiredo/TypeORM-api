@@ -1,7 +1,7 @@
 import { AppDataSource } from "../database/data-source";
 import { ServiceCategory } from "../database/entity/ServiceCategorie";
 
-const categorieRepository = AppDataSource.getMongoRepository(ServiceCategory);
+const categorieRepository = AppDataSource.getRepository(ServiceCategory);
 
 class CategoryService {
 

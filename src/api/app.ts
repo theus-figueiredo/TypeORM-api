@@ -5,7 +5,9 @@ import {
   ContractTypeRoute,
   ContractRoute,
   CostCenterRoute,
-  UserRoute
+  UserRoute,
+  ServiceStatusRoute,
+  ServiceCategoryRoute,
 } from '../routes';
 
 class App {
@@ -28,6 +30,8 @@ class App {
     this.express.use('/contract', ContractRoute);
     this.express.use('/cost-center', CostCenterRoute);
     this.express.use('/user', UserRoute);
+    this.express.use('/service-category', ServiceCategoryRoute);
+    this.express.use('/service-status', ServiceStatusRoute);
   };
 
   private async database() {
