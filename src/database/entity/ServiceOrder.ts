@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn, JoinTable, OneToMany, ManyToOne } from 'typeorm';
 import { CostCenter } from './CostCenter';
-import { ServiceCategorie } from './ServiceCategorie';
+import { ServiceCategory } from './ServiceCategorie';
 import { ServiceStatus } from './ServiceStatus';
 
 @Entity()
@@ -45,7 +45,7 @@ export class ServiceOrder {
   })
   status: ServiceStatus;
 
-  @ManyToMany(() => ServiceCategorie, (serviceCategorie) => serviceCategorie.OS)
+  @ManyToMany(() => ServiceCategory, (serviceCategory) => serviceCategory.OS)
   @JoinTable({
     name: "ServiceOrder_categorie",
     joinColumn: {
@@ -57,5 +57,5 @@ export class ServiceOrder {
       referencedColumnName: "id"
     }
   })
-  categorie: ServiceCategorie[];
+  category: ServiceCategory[];
 };

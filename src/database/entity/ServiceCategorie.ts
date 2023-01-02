@@ -2,14 +2,14 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 import { ServiceOrder } from './ServiceOrder';
 
 @Entity()
-export class ServiceCategorie {
+export class ServiceCategory {
 
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  categorie: string;
+  category: string;
 
-  @ManyToMany(() => ServiceOrder, (serviceOrder) => serviceOrder.categorie, { nullable: true })
+  @ManyToMany(() => ServiceOrder, (serviceOrder) => serviceOrder.category, { nullable: true })
   OS: ServiceOrder[] | null;
 };
