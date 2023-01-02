@@ -1,8 +1,10 @@
 import ContractService from "../service/ContractService";
+import getErrorMessage from "../helpers/GetErrorMessage";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 class ContractController {
+
   public async store(req: Request, res: Response): Promise<Response> {
     try {
       const { data } = req.body;
@@ -13,35 +15,26 @@ class ContractController {
       return res.status(StatusCodes.OK).json(newContract.contract);
   
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.BAD_REQUEST).json({ message });
+      const message = getErrorMessage(error);
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
 
-  public async getAll(_req: Request, res: Response): Promise<Response>
-  {
+  public async getAll(_req: Request, res: Response): Promise<Response> {
     try {
       const allContracts = await ContractService.readAll();
       return res.status(StatusCodes.OK).json(allContracts);
 
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.BAD_REQUEST).json({ message });
+      const message = getErrorMessage(error);
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
 
-  public async getById(req: Request, res: Response): Promise<Response>
-  {
-    try 
-    {
+  public async getById(req: Request, res: Response): Promise<Response> {
+    try {
       const { id } = req.params;
       const contract = await ContractService.readById(Number(id));
 
@@ -49,19 +42,14 @@ class ContractController {
 
       return res.status(StatusCodes.OK).json(contract.contract);
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.BAD_REQUEST).json({ message });
+      const message = getErrorMessage(error);
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
 
-  public async update(req: Request, res: Response): Promise<Response>
-  {
-    try
-    {
+  public async update(req: Request, res: Response): Promise<Response> {
+    try {
       const { id } = req.params;
       const { data } = req.body;
 
@@ -71,17 +59,13 @@ class ContractController {
       return res.status(StatusCodes.OK).json(contract.contract);
 
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.BAD_REQUEST).json({ message });
+      const message = getErrorMessage(error);
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
 
-  public async assignType(req: Request, res: Response): Promise<Response>
-  {
+  public async assignType(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
       const { typeId } = req.body;
@@ -93,17 +77,13 @@ class ContractController {
       return res.status(StatusCodes.OK).json(updatedContract);
 
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.BAD_REQUEST).json({ message });
+      const message = getErrorMessage(error);
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
 
-  public async removeType(req: Request, res: Response): Promise<Response>
-  {
+  public async removeType(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params
       
@@ -113,17 +93,13 @@ class ContractController {
       return res.status(StatusCodes.OK).json(updatedContract);
 
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.BAD_REQUEST).json({ message });
+      const message = getErrorMessage(error);
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
 
-  public async remove(req: Request, res: Response): Promise<Response>
-  {
+  public async remove(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
       const deleted = await ContractService.deleteContract(Number(id));
@@ -133,11 +109,8 @@ class ContractController {
       return res.status(StatusCodes.OK).json({ message: 'deleted' });
 
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.BAD_REQUEST).json({ message })
+      const message = getErrorMessage(error);
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 };

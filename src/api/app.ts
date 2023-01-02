@@ -4,7 +4,8 @@ import {
   RoleRoute,
   ContractTypeRoute,
   ContractRoute,
-  CostCenterRoute
+  CostCenterRoute,
+  UserRoute
 } from '../routes';
 
 class App {
@@ -22,11 +23,11 @@ class App {
   };
 
   private routes() {
-    this.express.use('/api-test', (_req, res) => res.send('Hello world'));
     this.express.use('/role', RoleRoute);
-    this.express.use('/contractType', ContractTypeRoute);
+    this.express.use('/contract-type', ContractTypeRoute);
     this.express.use('/contract', ContractRoute);
-    this.express.use('/costCenter', CostCenterRoute);
+    this.express.use('/cost-center', CostCenterRoute);
+    this.express.use('/user', UserRoute);
   };
 
   private async database() {

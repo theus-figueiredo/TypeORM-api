@@ -15,7 +15,7 @@ export class Customer {
   @JoinColumn()
   costCenter: CostCenter[];
 
-  @OneToOne(() => Contract, contract => contract.id, { cascade: true })
+  @OneToOne(() => Contract, contract => contract.customer, { cascade: true })
   @JoinColumn()
   contract: Contract;
 };

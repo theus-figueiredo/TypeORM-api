@@ -1,4 +1,5 @@
 import CostCenterService from "../service/CostCenterService";
+import getErrorMessage from "../helpers/GetErrorMessage";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -6,23 +7,20 @@ import { StatusCodes } from "http-status-codes";
 class CostCenterController {
 
 
-  private trhowNotFound(res: Response): Response {
+  public trhowNotFound(res: Response): Response {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Not Found'});
   };
   
 
   public async store(req: Request, res: Response): Promise<Response> {
     try {
-      const { name, monthlyBudget } = req.body;
-      const newCostCenter = await CostCenterService.create(name, monthlyBudget);
+      const { data } = req.body;
+      const newCostCenter = await CostCenterService.create(data);
 
       return res.status(StatusCodes.CREATED).json(newCostCenter);
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
+      const message = getErrorMessage(error)
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
@@ -32,11 +30,8 @@ class CostCenterController {
       const allCostCenters = await CostCenterService.readAll();
       return res.status(StatusCodes.OK).json(allCostCenters);
     } catch(error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
+      const message = getErrorMessage(error)
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
@@ -50,11 +45,8 @@ class CostCenterController {
 
       return res.status(StatusCodes.OK).json(costCenter);
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
+      const message = getErrorMessage(error)
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
@@ -70,11 +62,8 @@ class CostCenterController {
       return res.status(StatusCodes.OK).json(updatedCostCenter);
 
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
+      const message = getErrorMessage(error)
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     };
   };
 
@@ -88,11 +77,8 @@ class CostCenterController {
 
       return res.status(StatusCodes.OK).json({ message: 'deleted' });
     } catch (error) {
-      let message;
-      if(error instanceof Error) message = error.message;
-      else message = String(error);
-
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
+      const message = getErrorMessage(error)
+      return res.status(StatusCodes.BAD_REQUEST).json({ Error: message });
     }
   }
 };

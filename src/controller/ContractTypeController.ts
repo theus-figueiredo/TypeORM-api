@@ -3,14 +3,24 @@ import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 
 class ContractTypeController {
+
+  private throwError(res: Response, error: unknown): Response {
+    let message;
+    if(error instanceof Error) message = error.message;
+    else message = String(message);
+
+    return res.status(StatusCodes.BAD_REQUEST).json({ message });
+  };
+
+
   public async store(req: Request, res: Response): Promise<Response> {
     try {
       const { type } = req.body;
 
       const newContractType = await ContratcTypeService.addNew(type);
       return res.status(StatusCodes.CREATED).json(newContractType);
-    } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Error: err });
+    } catch (error) {
+      return this.throwError(res, error);
     };
   };
 
@@ -20,13 +30,14 @@ class ContractTypeController {
       const { id } = req.params;
       const contractType = await ContratcTypeService.readById(Number(id));
 
-      if(contractType.found) {
-        return res.status(StatusCodes.OK).json(contractType.type);
+      if(!contractType) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Not found' });
       };
 
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'not found'});
-    } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Error: err });
+      return res.status(StatusCodes.OK).json(contractType);
+
+    } catch (error) {
+      return this.throwError(res, error);
     }
   };
 
@@ -36,8 +47,8 @@ class ContractTypeController {
       const allContractTypes = await ContratcTypeService.readAll();
 
       return res.status(StatusCodes.OK).json(allContractTypes);
-    } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Error: err });
+    } catch (error) {
+      return this.throwError(res, error);
     };
   };
 
@@ -48,12 +59,11 @@ class ContractTypeController {
       const { type } = req.body;
       const updatedContractType = await ContratcTypeService.update(Number(id), type);
 
-      if(updatedContractType.found) return res.status(StatusCodes.OK).json(updatedContractType.type);
+      if(!updatedContractType) return res.status(StatusCodes.BAD_REQUEST).json({ message: 'not found'});
+      return res.status(StatusCodes.OK).json(updatedContractType);
 
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'not found'});
-
-    } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Error: err });
+    } catch (error) {
+      return this.throwError(res, error);
     };
   };
 
@@ -66,8 +76,8 @@ class ContractTypeController {
       if(deleted) return res.status(StatusCodes.OK).json({ message: 'deleted' });
 
       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'not found' });
-    } catch (err) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ Error: err });
+    } catch (error) {
+      return this.throwError(res, error);
     };
   };
 };

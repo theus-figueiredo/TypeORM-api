@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
+import { ManyToOne } from 'typeorm/decorator/relations/ManyToOne';
 import { ContractType } from './ContractType';
 import { Customer } from './Customer';
 
@@ -26,7 +27,7 @@ export class Contract {
   @Column()
   description: string;
 
-  @OneToOne(() => ContractType, contractType => contractType.type, { cascade: true })
+  @ManyToOne(() => ContractType, contractType => contractType.type, { cascade: true })
   @JoinColumn()
   contractType: ContractType | null
 

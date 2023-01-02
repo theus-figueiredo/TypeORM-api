@@ -31,6 +31,6 @@
       "typeorm": "typeorm-ts-node-commonjs",
       "migration:generate": "typeorm-ts-node-commonjs -d ./src/database/data-source.ts migration:generate ./src/database/migration/default",
       "migration:run": "typeorm-ts-node-commonjs -d ./src/database/data-source.ts migration:run",
-      "migration:show": "typeorm-ts-node-commonjs -d ./src/database/data-source.ts migration:show"      
+      "migration:show": "typeorm-ts-node-commonjs -d ./src/database/data-source.ts migration:show"
    }
 }

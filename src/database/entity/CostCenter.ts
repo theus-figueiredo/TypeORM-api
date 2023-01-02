@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, ManyToMany, OneToMany } from "typeorm";
 import { User } from "./User";
 import { Customer } from './Customer';
+import { ServiceOrder } from "./ServiceOrder";
 
 @Entity()
 export class CostCenter {
@@ -14,9 +15,12 @@ export class CostCenter {
   @Column({ type: 'decimal' })
   monthlyBudget: number
 
-  @ManyToOne(() => User, user => user.costCenter)
-  user: User;
+  @ManyToMany(() => User, user => user.costCenter, { nullable: true })
+  user: User[]
 
-  @ManyToOne(() => Customer, customer => customer.costCenter)
-  customer: Customer;
+  @ManyToOne(() => Customer, customer => customer.costCenter, { nullable: true })
+  customer: Customer | null;
+
+  @OneToMany(() => ServiceOrder, (serviceOrder) => serviceOrder.costCenter, { nullable: true })
+  serviceOrder: ServiceOrder[];
 };

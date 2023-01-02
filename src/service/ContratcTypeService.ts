@@ -3,12 +3,6 @@ import { AppDataSource } from "../database/data-source";
 
 const contractTypeRepo = AppDataSource.getRepository(ContractType);
 
-interface ContractTypeDTO {
-  type?: ContractType
-  found: boolean
-};
-
-
 class ContractTypeService {
   public async addNew(type: string): Promise<ContractType> {
     const newCType = new ContractType();
@@ -19,11 +13,11 @@ class ContractTypeService {
   };
 
 
-  public async readById(id: number): Promise<ContractTypeDTO> {
+  public async readById(id: number): Promise<ContractType | null> {
     const cType = await contractTypeRepo.findOneBy({ id });
 
-    if(cType) return { type: cType, found: true }
-    return { found: false };
+    if(!cType) return null
+    return cType
   };
 
 
@@ -33,16 +27,14 @@ class ContractTypeService {
   };
 
 
-  public async update(id: number, newType: string): Promise<ContractTypeDTO> {
-    const contractTypeToUpdate = await contractTypeRepo.findOneBy({ id });
+  public async update(id: number, newType: string): Promise<ContractType | null> {
+    const contractType = await contractTypeRepo.findOneBy({ id });
     
-    if(contractTypeToUpdate) {
-      contractTypeToUpdate.type = newType;
-      await contractTypeRepo.save(contractTypeToUpdate);
-      return { type: contractTypeToUpdate, found: true };
-    };
+    if(!contractType) return null;
 
-    return { found: false };
+    contractType.type = newType;
+    await contractTypeRepo.save(contractType);
+    return contractType;
   };
 
 

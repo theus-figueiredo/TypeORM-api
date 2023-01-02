@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany  } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, ManyToMany, JoinTable  } from "typeorm"
 import { CostCenter } from "./CostCenter";
 import { Role } from "./Role";
+
 
 @Entity()
 export class User {
@@ -20,11 +21,21 @@ export class User {
   @Column()
   password: string;
 
-  @OneToOne(() => Role, role => role.role, { cascade: true })
-  @JoinColumn()
-  role: Role | null
+  @ManyToOne(() => Role, role => role.user, { cascade: true, nullable: true })
+  @JoinColumn({ name: 'role'})
+  role: Role | null;
 
-  @OneToMany(() => CostCenter, costCenter => costCenter.user, { cascade: true })
-  @JoinColumn()
+  @ManyToMany(() => CostCenter, costCenter => costCenter.user, { cascade: true, nullable: true })
+  @JoinTable({ 
+    name: "user_costCenter",
+    joinColumn: { 
+      name: "costCenter_id",
+      referencedColumnName: "id"
+    },
+    inverseJoinColumn: {
+      name: "user_id",
+      referencedColumnName: "id"
+    }
+  })
   costCenter: CostCenter[] | null;
 };
