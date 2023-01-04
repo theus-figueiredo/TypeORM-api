@@ -10,52 +10,45 @@ export class ServiceOrder {
   id: number;
 
   @Column()
-  OS_ID: string;
+  identifier: String;
 
   @Column()
-  description: string;
+  description: String;
 
   @Column()
-  creationDate: string;
+  creationDate: String;
 
   @Column()
-  chargingDate: String
+  requestedAt: String
 
-  @Column({ type: 'decimal' })
-  exectutionValue: number;
+  @Column({ type: 'decimal', nullable: true })
+  exectutionValue: number | null;
 
-  @Column({ type: 'decimal' })
-  chargedValue: number;
+  @Column({ type: 'decimal', nullable: true })
+  chargedValue: number | null;
 
-  @OneToMany(() => CostCenter, (costCenter) => costCenter.serviceOrder, { nullable: true })
+  @Column({ type: 'text', nullable: true })
+  comments: String | null;
+
+  @ManyToOne(() => CostCenter, (costCenter) => costCenter.serviceOrder, { nullable: true })
   @JoinColumn()
-  costCenter: CostCenter[];
+  costCenter: CostCenter;
 
-  @ManyToMany(() => ServiceStatus, (serviceStatus) => serviceStatus.serviceOrder)
-  @JoinTable({
-    name: "ServiceOrder_status",
-    joinColumn: {
-      name: "serviceOrder_id",
-      referencedColumnName: "id"
-    },
-    inverseJoinColumn: {
-      name: "serviceOrder_id",
-      referencedColumnName: "id"
-    }
-  })
+  @ManyToOne(() => ServiceStatus, (serviceStatus) => serviceStatus.status)
+  @JoinColumn()
   status: ServiceStatus;
 
-  @ManyToMany(() => ServiceCategory, (serviceCategory) => serviceCategory.OS)
+  @ManyToMany(() => ServiceCategory, (serviceCategory) => serviceCategory.serviceOrder)
   @JoinTable({
-    name: "ServiceOrder_categorie",
+    name: "ServiceOrder_category",
     joinColumn: {
       name: "serviceOrder_id",
       referencedColumnName: "id"
     },
     inverseJoinColumn: {
-      name: "serviceCategorie_id",
+      name: "serviceCategory_id",
       referencedColumnName: "id"
     }
   })
-  category: ServiceCategory[];
+  category?: ServiceCategory[];
 };

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { ServiceOrder } from './ServiceOrder';
 
 @Entity()
@@ -10,6 +10,6 @@ export class ServiceStatus {
   @Column()
   status: string;
 
-  @ManyToMany(() => ServiceOrder, (serviceOrder) => serviceOrder.status)
+  @OneToMany(() => ServiceOrder, (serviceOrder) => serviceOrder.status)
   serviceOrder: ServiceOrder[];
 };

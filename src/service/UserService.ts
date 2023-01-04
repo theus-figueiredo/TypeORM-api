@@ -3,7 +3,7 @@ import { AppDataSource } from '../database/data-source';
 import { CostCenter } from '../database/entity/CostCenter';
 import { Role } from '../database/entity/Role';
 import { User } from '../database/entity/User';
-import _, { indexOf } from 'lodash';
+import _ from 'lodash';
 
 
 const userRepository = AppDataSource.getRepository(User);

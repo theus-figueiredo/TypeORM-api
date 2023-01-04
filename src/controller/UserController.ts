@@ -108,9 +108,9 @@ class UserController {
   public async addCostCenter(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const { ids } = req.body;
+      const { costCenters } = req.body;
 
-      const updatedUser = await UserService.asignCostCenter(Number(id), ids);
+      const updatedUser = await UserService.asignCostCenter(Number(id), costCenters);
       if(!updatedUser) return this.notFound(res);
 
       return res.status(StatusCodes.OK).json(updatedUser);

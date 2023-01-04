@@ -11,5 +11,5 @@ export class ServiceCategory {
   category: string;
 
   @ManyToMany(() => ServiceOrder, (serviceOrder) => serviceOrder.category, { nullable: true })
-  OS: ServiceOrder[] | null;
+  serviceOrder: ServiceOrder[] | null;
 };
