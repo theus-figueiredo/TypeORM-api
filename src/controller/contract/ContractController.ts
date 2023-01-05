@@ -8,8 +8,9 @@ class ContractController {
   public async store(req: Request, res: Response): Promise<Response> {
     try {
       const { data } = req.body;
+      const { token } = req.headers;
       
-      const newContract = await ContractService.addNew(data);
+      const newContract = await ContractService.addNew(data, String(token));
       if(!newContract.contract) return res.status(StatusCodes.BAD_REQUEST).json({ message: newContract.message});
 
       return res.status(StatusCodes.OK).json(newContract.contract);
@@ -52,8 +53,9 @@ class ContractController {
     try {
       const { id } = req.params;
       const { data } = req.body;
+      const token = req.header;
 
-      const contract = await ContractService.updateGeneralData(Number(id), data);
+      const contract = await ContractService.updateGeneralData(Number(id), data, String(token));
       if(!contract.contract) return res.status(StatusCodes.BAD_REQUEST).json({ message: contract.message });
       
       return res.status(StatusCodes.OK).json(contract.contract);
@@ -69,8 +71,9 @@ class ContractController {
     try {
       const { id } = req.params;
       const { typeId } = req.body;
+      const token = req.header
 
-      const updatedContract = await ContractService.assignContractType(Number(id), Number(typeId));
+      const updatedContract = await ContractService.assignContractType(Number(id), Number(typeId), String(token));
       
       if(!updatedContract) return res.status(StatusCodes.BAD_REQUEST).json({ message: 'not found' });
 
@@ -86,8 +89,9 @@ class ContractController {
   public async removeType(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params
+      const token = req.header;
       
-      const updatedContract = await ContractService.removeContract(Number(id));
+      const updatedContract = await ContractService.removeContractType(Number(id), String(token));
       if(!updatedContract) return res.status(StatusCodes.BAD_REQUEST).json({ message: 'notfound' });
       
       return res.status(StatusCodes.OK).json(updatedContract);
@@ -102,7 +106,9 @@ class ContractController {
   public async remove(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const deleted = await ContractService.deleteContract(Number(id));
+      const token = req.header;
+
+      const deleted = await ContractService.deleteContract(Number(id), String(token));
 
       if(!deleted) return res.status(StatusCodes.BAD_REQUEST).json({ message: 'not found' });
 

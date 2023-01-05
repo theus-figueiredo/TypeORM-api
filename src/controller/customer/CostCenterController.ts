@@ -15,7 +15,8 @@ class CostCenterController {
   public async store(req: Request, res: Response): Promise<Response> {
     try {
       const { data } = req.body;
-      const newCostCenter = await CostCenterService.create(data);
+      const token = req.header;
+      const newCostCenter = await CostCenterService.create(data, String(token));
 
       return res.status(StatusCodes.CREATED).json(newCostCenter);
     } catch (error) {
@@ -55,8 +56,9 @@ class CostCenterController {
     try {
       const { data } = req.body;
       const { id } = req.params;
+      const token = req.header;
   
-      const updatedCostCenter = await CostCenterService.updateData(Number(id), data);
+      const updatedCostCenter = await CostCenterService.updateData(Number(id), data, String(token));
       if(!updatedCostCenter) return this.trhowNotFound(res);
 
       return res.status(StatusCodes.OK).json(updatedCostCenter);
@@ -71,8 +73,9 @@ class CostCenterController {
   public async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
+      const token = req.header;
 
-      const delted = await CostCenterService.delete(Number(id));
+      const delted = await CostCenterService.delete(Number(id), String(token));
       if(!delted) return this.trhowNotFound(res);
 
       return res.status(StatusCodes.OK).json({ message: 'deleted' });

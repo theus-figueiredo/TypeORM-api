@@ -2,6 +2,7 @@ import { Contract } from "../../database/entity/Contract";
 import { ContractType } from "../../database/entity/ContractType";
 import { AppDataSource } from "../../database/data-source";
 import { Customer } from "../../database/entity/Customer";
+import UserService from "../user/UserService";
 
 const contractRepository = AppDataSource.getRepository(Contract);
 const customerRepository = AppDataSource.getRepository(Customer);
@@ -52,6 +53,11 @@ class ContractService {
     return value in Contract;
   };
 
+  private validatePermission(token: string): Boolean {
+    const canProceed = UserService.validateRolePermission(token, 'admin');
+    return canProceed;
+  }
+
   private async validateContractType(id: number): Promise<ContractType | null>
   {
     const contractType = await contractTypeRopository.findOneBy({ id });
@@ -60,7 +66,10 @@ class ContractService {
   };
 
 
-  public async addNew(data: IContract): Promise<IContractDTO> {
+  public async addNew(data: IContract, token: string): Promise<IContractDTO> {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return { couldExecute: false, message: 'permission denied' };
+  
     let contractType;
   
     if (data.contractType || data.customer) {
@@ -99,7 +108,10 @@ class ContractService {
   };
 
 
-  public async updateGeneralData(id: number, data: IContractUpdate): Promise<IContractDTO> {
+  public async updateGeneralData(id: number, data: IContractUpdate, token: string): Promise<IContractDTO> {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return { couldExecute: false, message: 'permission denied' };
+
     const contract = await contractRepository.findOne({ where: { id }, relations:['contractType'] });
     if(!contract) return { couldExecute: false, message: 'contract not found' };
 
@@ -112,8 +124,11 @@ class ContractService {
   };
 
 
-  public async assignContractType(id: number, typeId: number): Promise<Contract | null>
+  public async assignContractType(id: number, typeId: number, token: string): Promise<Contract | null>
   {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return null;
+
     const contract = await this.validateContract(id);
     if(!contract) return null;
 
@@ -126,8 +141,11 @@ class ContractService {
   };
 
 
-  public async removeContract(id: number): Promise <Contract | null>
+  public async removeContractType(id: number, token: string): Promise <Contract | null>
   {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return null;
+
     const contract = await this.validateContract(id);
     if(!contract) return null;
 
@@ -138,8 +156,11 @@ class ContractService {
   };
 
 
-  public async deleteContract(id: number): Promise<boolean>
+  public async deleteContract(id: number, token: string): Promise<boolean>
   {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return false;
+
     const contract = await this.validateContract(id);
     if(!contract) return false;
 

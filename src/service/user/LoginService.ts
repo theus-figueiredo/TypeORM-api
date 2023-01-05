@@ -14,14 +14,15 @@ const userRepository = AppDataSource.getRepository(User);
 class LoginService {
   private async validateUserExists(email: string, password: string): Promise<User | null> {
     const hashedPass = md5(password);
-    const user = await userRepository.findOne({ where: { email, password: hashedPass } });
+    const user = await userRepository.findOne({ where: { email, password: hashedPass }, relations: ['role'] });
     if (!user) return null;
     return user;
   };
 
 
   public async login(data: ILoginData): Promise<string | null> {
-    const user = await this.validateUserExists(data.email, data.password);
+    const { email, password } = data;
+    const user = await this.validateUserExists(email, password);
     if(!user) return null;
 
     const userData = {

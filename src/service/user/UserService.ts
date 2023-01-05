@@ -45,6 +45,7 @@ class UserService {
 
   public validateRolePermission(token: string, role: string): Boolean {
     const { data } = JwtActions.authenticateUser(token);
+    console.log(data);
     return data.role === role
   };
 
