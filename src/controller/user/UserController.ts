@@ -1,5 +1,5 @@
-import UserService from "../service/UserService";
-import getErrorMessage from "../helpers/GetErrorMessage";
+import UserService from "../../service/user/UserService";
+import getErrorMessage from "../../helpers/GetErrorMessage";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import _ from "lodash";

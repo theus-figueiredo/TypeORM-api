@@ -1,9 +1,9 @@
-import { ServiceOrder } from "../database/entity/ServiceOrder";
-import { AppDataSource } from "../database/data-source";
-import { CostCenter } from "../database/entity/CostCenter";
-import { ServiceStatus } from "../database/entity/ServiceStatus";
-import { ServiceCategory } from "../database/entity/ServiceCategorie";
-import DateActions from "../helpers/DateActions";
+import { ServiceOrder } from "../../database/entity/ServiceOrder";
+import { AppDataSource } from "../../database/data-source";
+import { CostCenter } from "../../database/entity/CostCenter";
+import { ServiceStatus } from "../../database/entity/ServiceStatus";
+import { ServiceCategory } from "../../database/entity/ServiceCategorie";
+import DateActions from "../../helpers/DateActions";
 
 const OSRepository = AppDataSource.getRepository(ServiceOrder);
 
@@ -87,10 +87,16 @@ class ServiceOrderServ {
 
 
   private async assignData(serviceOrder: ServiceOrder, data: IDataToUpdate): Promise<ServiceOrder | null> {
-    for( let [key, value] of Object.entries(data)) {
-      if(this.isValidInput(key))(serviceOrder as any)[key] = value
-    };
-    return serviceOrder
+    try {
+      for( let [key, value] of Object.entries(data)) {
+        (serviceOrder as any)[key] = value
+      };
+      
+      await OSRepository.save(serviceOrder);
+      return serviceOrder;
+    } catch (error) {
+      return null;
+    }
   };
 
 
@@ -100,8 +106,9 @@ class ServiceOrderServ {
     const categories = await this.validateCategory(data.category);
     const status = await this.validateStatus(data.status);
     const costCenter = await this.validateCostCenter(data.costCenter);
+    const isValidDate = DateActions.isValidDate(data.requestedAt);
 
-    if (!categories || !status || !costCenter) return null;
+    if (!categories || !status || !costCenter || !isValidDate) return null;
 
     serviceOrder.category = [...categories];
     serviceOrder.status = status;

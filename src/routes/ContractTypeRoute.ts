@@ -1,4 +1,4 @@
-import ContractTypeController from "../controller/ContractTypeController";
+import ContractTypeController from "../controller/contract/ContractTypeController";
 import { Router } from "express";
 
 const router = Router();

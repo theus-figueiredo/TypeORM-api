@@ -1,5 +1,5 @@
-import { ContractType } from "../database/entity/ContractType";
-import { AppDataSource } from "../database/data-source";
+import { ContractType } from "../../database/entity/ContractType";
+import { AppDataSource } from "../../database/data-source";
 
 const contractTypeRepo = AppDataSource.getRepository(ContractType);
 

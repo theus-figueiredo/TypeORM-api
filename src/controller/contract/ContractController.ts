@@ -1,5 +1,5 @@
-import ContractService from "../service/ContractService";
-import getErrorMessage from "../helpers/GetErrorMessage";
+import ContractService from "../../service/contract/ContractService";
+import getErrorMessage from "../../helpers/GetErrorMessage";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 

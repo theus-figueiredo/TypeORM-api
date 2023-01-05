@@ -1,7 +1,7 @@
-import ServiceOrderServ from "../service/ServiceOrderService";
+import ServiceOrderServ from "../../service/serviceOrder/ServiceOrderService";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
-import getErrorMessage from "../helpers/GetErrorMessage";
+import getErrorMessage from "../../helpers/GetErrorMessage";
 
 class ServiceOrderController {
 

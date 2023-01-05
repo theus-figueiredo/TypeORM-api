@@ -1,7 +1,7 @@
-import { Contract } from "../database/entity/Contract";
-import { ContractType } from "../database/entity/ContractType";
-import { AppDataSource } from "../database/data-source";
-import { Customer } from "../database/entity/Customer";
+import { Contract } from "../../database/entity/Contract";
+import { ContractType } from "../../database/entity/ContractType";
+import { AppDataSource } from "../../database/data-source";
+import { Customer } from "../../database/entity/Customer";
 
 const contractRepository = AppDataSource.getRepository(Contract);
 const customerRepository = AppDataSource.getRepository(Customer);

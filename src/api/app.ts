@@ -9,6 +9,7 @@ import {
   ServiceStatusRoute,
   ServiceCategoryRoute,
   ServiceOrderRoute,
+  LoginRoute,
 } from '../routes';
 
 class App {
@@ -34,6 +35,7 @@ class App {
     this.express.use('/service-category', ServiceCategoryRoute);
     this.express.use('/service-status', ServiceStatusRoute);
     this.express.use('/service-order', ServiceOrderRoute);
+    this.express.use('/login', LoginRoute);
   };
 
   private async database() {

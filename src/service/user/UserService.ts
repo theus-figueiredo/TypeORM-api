@@ -1,10 +1,10 @@
 import md5 from 'md5';
-import { AppDataSource } from '../database/data-source';
-import { CostCenter } from '../database/entity/CostCenter';
-import { Role } from '../database/entity/Role';
-import { User } from '../database/entity/User';
+import { AppDataSource } from '../../database/data-source';
+import { CostCenter } from '../../database/entity/CostCenter';
+import { Role } from '../../database/entity/Role';
+import { User } from '../../database/entity/User';
 import _ from 'lodash';
-
+import JwtActions from '../../helpers/JwtActions';
 
 const userRepository = AppDataSource.getRepository(User);
 const costCenterRepository = AppDataSource.getRepository(CostCenter);
@@ -35,16 +35,17 @@ class UserService {
     return value in User;
   };
 
+
   private async validateUser(id: number): Promise<User | null> {
     const user = await userRepository.findOne({ where: { id }, relations: ['role', 'costCenter'] });
     if(!user) return null;
     return user;
   }
 
-  private async validateRole(id: number): Promise<Role | null> {
-    const role = await roleRepository.findOneBy({ id });
-    if(!role) return null;
-    return role;
+
+  public validateRolePermission(token: string, role: string): Boolean {
+    const { data } = JwtActions.authenticateUser(token);
+    return data.role === role
   };
 
 

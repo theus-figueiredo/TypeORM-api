@@ -1,17 +1,19 @@
-import CategoryService from "../service/CategoryService";
+import StatusService from "../../service/serviceOrder/StatusService";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
-import getErrorMessage from "../helpers/GetErrorMessage";
+import getErrorMessage from "../../helpers/GetErrorMessage";
 
-class CategoryController {
 
+class StatusController {
   public async store(req: Request, res: Response): Promise<Response> {
     try {
-      const { category } = req.body;
-      const newCategory = await CategoryService.store(category);
-      return res.status(StatusCodes.CREATED).json(newCategory);
+      const { status } = req.body;
+      const newStatus = await StatusService.store(status);
+
+      return res.status(StatusCodes.CREATED).json(newStatus);
     } catch (error) {
       const message = getErrorMessage(error);
+
       return res.status(StatusCodes.BAD_REQUEST).json(message);
     };
   };
@@ -19,8 +21,8 @@ class CategoryController {
 
   public async getAll(_req: Request, res: Response): Promise<Response> {
     try {
-      const allCategories = await CategoryService.readAll();
-      return res.status(StatusCodes.OK).json(allCategories);
+      const allStatus = await StatusService.readAll();
+      return res.status(StatusCodes.OK).json(allStatus);
     } catch (error) {
       const message = getErrorMessage(error);
       return res.status(StatusCodes.BAD_REQUEST).json(message);
@@ -31,28 +33,30 @@ class CategoryController {
   public async getById(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const category = await CategoryService.readById(Number(id));
+      const serviceStatus = await StatusService.readById(Number(id));
 
-      if(!category) return res.status(StatusCodes.NOT_FOUND).json({ message: 'Not Found' });
+      if(!serviceStatus) return res.status(StatusCodes.NOT_FOUND).json({ message: 'Not Found' });
 
-      return res.status(StatusCodes.OK).json(category);
+      return res.status(StatusCodes.OK).json(serviceStatus);
     } catch (error) {
       const message = getErrorMessage(error);
       return res.status(StatusCodes.BAD_REQUEST).json(message);
     };
   };
 
-
+  
   public async update(req: Request, res: Response): Promise<Response> {
     try {
+
       const { id } = req.params;
-      const { category } = req.body;
+      const { status } = req.body;
 
-      const updatedCategory = await CategoryService.update(Number(id), category);
+      const updatedStatus = await StatusService.update(Number(id), status);
 
-      if(!updatedCategory) return res.status(StatusCodes.NOT_FOUND).json({ message: 'Not Found' });
+      if(!updatedStatus) return res.status(StatusCodes.NOT_FOUND).json({ message: 'Not Found'});
 
-      return res.status(StatusCodes.OK).json(updatedCategory);
+      return res.status(StatusCodes.OK).json(updatedStatus);
+
     } catch (error) {
       const message = getErrorMessage(error);
       return res.status(StatusCodes.BAD_REQUEST).json(message);
@@ -63,7 +67,7 @@ class CategoryController {
   public async delete(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const deleted = await CategoryService.delete(Number(id));
+      const deleted = await StatusService.delete(Number(id));
 
       if(!deleted) return res.status(StatusCodes.NOT_FOUND).json({ message: 'Not Found' });
 
@@ -71,8 +75,8 @@ class CategoryController {
     } catch (error) {
       const message = getErrorMessage(error);
       return res.status(StatusCodes.BAD_REQUEST).json(message);
-    }
+    };
   };
 };
 
-export default new CategoryController();
+export default new StatusController();

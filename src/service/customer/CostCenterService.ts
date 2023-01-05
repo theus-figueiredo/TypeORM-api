@@ -1,5 +1,6 @@
-import { CostCenter } from "../database/entity/CostCenter";
-import { AppDataSource } from "../database/data-source";
+import { CostCenter } from "../../database/entity/CostCenter";
+import { AppDataSource } from "../../database/data-source";
+import UserService from "../user/UserService";
 
 const costCenterRepository = AppDataSource.getRepository(CostCenter);
 
@@ -11,7 +12,7 @@ interface ICostCenterUpdate {
 interface ICostCenter {
   name: string,
   monthlyBudget: number
-}
+};
 
 
 class CostCenterService {
@@ -20,7 +21,15 @@ class CostCenterService {
     return value in CostCenter;
   };
 
-  public async create(data: ICostCenter): Promise<CostCenter> {
+  private validatePermission(token: string): Boolean {
+    const canProceed = UserService.validateRolePermission(token, 'admin');
+    return canProceed;
+  }
+
+  public async create(data: ICostCenter, token: string): Promise<CostCenter | null> {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return null;
+
     const newCostCenter = new CostCenter();
 
     newCostCenter.name = data.name;
@@ -45,9 +54,12 @@ class CostCenterService {
   };
 
 
-  public async updateData(id: number, data: ICostCenterUpdate): Promise<CostCenter | boolean> {
+  public async updateData(id: number, data: ICostCenterUpdate, token: string): Promise<CostCenter | null> {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return null;
+
     const costCenter = await costCenterRepository.findOneBy({ id });
-    if(!costCenter) return false;
+    if(!costCenter) return null;
 
     for(const[key, value] of Object.entries(data)) {
       if(this.isValidInput(key)) (costCenter as any)[key] = value
@@ -58,7 +70,10 @@ class CostCenterService {
   };
 
 
-  public async delete(id: number): Promise<boolean> {
+  public async delete(id: number, token: string): Promise<boolean> {
+    const canProceed = this.validatePermission(token);
+    if(!canProceed) return false;
+
     const costCenter = await costCenterRepository.findOneBy({ id });
     if(!costCenter) return false;
 

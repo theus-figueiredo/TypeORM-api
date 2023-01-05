@@ -1,7 +1,7 @@
-import { Customer } from "../database/entity/Customer";
-import { AppDataSource } from "../database/data-source";
-import { CostCenter } from "../database/entity/CostCenter";
-import { Contract } from "../database/entity/Contract";
+import { Customer } from "../../database/entity/Customer";
+import { AppDataSource } from "../../database/data-source";
+import { CostCenter } from "../../database/entity/CostCenter";
+import { Contract } from "../../database/entity/Contract";
 import { In } from 'typeorm';
 
 const customerRepository = AppDataSource.getRepository(Customer);

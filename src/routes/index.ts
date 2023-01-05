@@ -6,6 +6,7 @@ import UserRoute from './UserRoute';
 import ServiceStatusRoute from './ServiceStatusRoute';
 import ServiceCategoryRoute from './ServiceCategoryRoute';
 import ServiceOrderRoute from './ServiceOrderRoute';
+import LoginRoute from './LoginRoute';
 
 export {
   RoleRoute,
@@ -16,4 +17,5 @@ export {
   ServiceStatusRoute,
   ServiceCategoryRoute,
   ServiceOrderRoute,
+  LoginRoute,
 };

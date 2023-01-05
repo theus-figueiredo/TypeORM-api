@@ -1,4 +1,4 @@
-import ContratcTypeService from "../service/ContratcTypeService";
+import ContratcTypeService from "../../service/contract/ContratcTypeService";
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 

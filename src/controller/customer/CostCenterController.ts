@@ -1,5 +1,5 @@
-import CostCenterService from "../service/CostCenterService";
-import getErrorMessage from "../helpers/GetErrorMessage";
+import CostCenterService from "../../service/customer/CostCenterService";
+import getErrorMessage from "../../helpers/GetErrorMessage";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 

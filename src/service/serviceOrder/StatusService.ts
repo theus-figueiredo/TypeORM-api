@@ -1,5 +1,5 @@
-import { AppDataSource } from "../database/data-source";
-import { ServiceStatus } from "../database/entity/ServiceStatus";
+import { AppDataSource } from "../../database/data-source";
+import { ServiceStatus } from "../../database/entity/ServiceStatus";
 
 const serviceStatusRepo = AppDataSource.getRepository(ServiceStatus);
 

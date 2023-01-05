@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import RoleService from "../service/RoleService";
+import RoleService from "../../service/user/RoleService";
 
 class RoleController {
   public async add(req: Request, res: Response): Promise<Response> {
