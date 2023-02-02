@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, ManyToMany, JoinTable  } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, ManyToMany, JoinTable, OneToMany  } from "typeorm"
+import { Comment } from "./Comments";
 import { CostCenter } from "./CostCenter";
 import { Role } from "./Role";
 
@@ -20,6 +21,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 
   @ManyToOne(() => Role, role => role.user, { cascade: true, nullable: true })
   @JoinColumn({ name: 'role'})

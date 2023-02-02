@@ -46,7 +46,13 @@ class UserService {
   public validateRolePermission(token: string, role: string): Boolean {
     const { data } = JwtActions.authenticateUser(token);
     console.log(data);
-    return data.role === role
+    return data.role === role;
+  };
+
+
+  public validadeIfIsAdmin(token: string): Boolean {
+    const { data } = JwtActions.authenticateUser(token);
+    return data.role === 'admin';
   };
 
 

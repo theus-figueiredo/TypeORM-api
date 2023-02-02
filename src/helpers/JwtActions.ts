@@ -10,6 +10,7 @@ export interface IUserJWT {
     lastName: string
     email: string
     role: string
+    costCenter: Number[]
   }
 }
 
@@ -17,7 +18,6 @@ class JwtActions {
   public generateToken(user: IUserJWT): string {
     const secretKey = String(process.env.JWT_SECRET);
     const token = jwt.sign(user, secretKey, { algorithm: 'HS256', expiresIn: '7d'});
-    console.log(token);
     return token;
   };
 

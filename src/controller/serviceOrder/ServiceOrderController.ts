@@ -22,12 +22,17 @@ class ServiceOrderController {
 
   public async getAll(req: Request, res: Response): Promise<Response> {
     try {
-      const allServiceOrders = await ServiceOrderServ.getAll();
-      return res.status(StatusCodes.OK).json(allServiceOrders);
+      const { authorization } = req.headers;
+      console.log(req.headers);
+
+      const allServiceOrders = await ServiceOrderServ.getAll(String(authorization));
+      if(!allServiceOrders) return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid authentication token' });
+      else return res.status(StatusCodes.OK).json(allServiceOrders);
 
     } catch (error) {
       
       const message = getErrorMessage(error);
+      console.log(message);
       return res.status(StatusCodes.BAD_REQUEST).json(message);
     };
   };
@@ -131,7 +136,6 @@ class ServiceOrderController {
       return res.status(StatusCodes.BAD_REQUEST).json(message);
     };
   };
-
 
   public async delete(req: Request, res: Response): Promise<Response> {
     try {

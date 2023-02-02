@@ -6,7 +6,7 @@ const router = Router();
 router.post('/', CostCenterController.store);
 router.get('/', CostCenterController.getAll)
 router.get('/:id', CostCenterController.getById);
-router.patch('/update/:id', CostCenterController.update);
-router.delete('/delete/:id', CostCenterController.delete);
+router.patch('/:id', CostCenterController.update);
+router.delete('/:id', CostCenterController.delete);
 
 export default router;

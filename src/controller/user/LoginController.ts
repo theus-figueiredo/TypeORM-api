@@ -7,7 +7,6 @@ class LoginController {
   public async login(req: Request, res: Response): Promise<Response> {
     try {
       const { data } = req.body;
-      console.log(data);
       const token = await LoginService.login(data);
 
       if(!token) return res.status(StatusCodes.BAD_REQUEST).json({ message: 'invalid data' });

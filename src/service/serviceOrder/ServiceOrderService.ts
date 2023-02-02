@@ -1,50 +1,33 @@
 import { ServiceOrder } from "../../database/entity/ServiceOrder";
-import { AppDataSource } from "../../database/data-source";
 import { CostCenter } from "../../database/entity/CostCenter";
 import { ServiceStatus } from "../../database/entity/ServiceStatus";
 import { ServiceCategory } from "../../database/entity/ServiceCategorie";
+import { repositories } from "../../database/repositories/Repositories";
+import _ from 'lodash';
 import DateActions from "../../helpers/DateActions";
+import { IServiceOrder } from "../../@types/ServiceOrderTypes";
+import { IDataToUpdate } from "../../@types/ServiceOrderTypes";
+import JwtActions from "../../helpers/JwtActions";
+import { In } from "typeorm";
 
-const OSRepository = AppDataSource.getRepository(ServiceOrder);
+const {
+  serviceOrderRepository,
+  costCenterRepository,
+  serviceCategoryRepository,
+  serviceStatusRepository } = repositories;
 
-interface IServiceOrder {
-  id?: number
-  identifier: string
-  description: string
-  requestedAt: string
-  exectionValue: number
-  chargedValue: number
-  comments?: string
-  costCenter: number
-  status: number
-  category: number[]
-};
-
-interface IDataToUpdate {
-  identifier?: string
-  description?: string
-  executionValue?: number
-  chargedValue?: number
-  comments?: number
-  requestedAt?: Date
-}
 
 class ServiceOrderServ {
 
-  private isValidInput (value: string): value is keyof ServiceOrder {
-    return value in ServiceOrder;
-  };
-
   private async validateServiceOrder(id: number): Promise<ServiceOrder | null> {
-    const serviceOrder = await OSRepository.findOne({ where: { id }, relations: ['costCenter', 'status', 'category']});
+    const serviceOrder = await serviceOrderRepository.findOne({ where: { id }, relations: ['costCenter', 'status', 'category', 'comments']});
     if(!serviceOrder) return null;
     return serviceOrder;
   }
 
 
   private async validateCostCenter(id: number): Promise<null | CostCenter> {
-    const CCrepository = AppDataSource.getRepository(CostCenter);
-    const costCenter = await CCrepository.findOneBy({ id });
+    const costCenter = await costCenterRepository.findOneBy({ id });
 
     if(!costCenter) return null;
     return costCenter;
@@ -52,12 +35,11 @@ class ServiceOrderServ {
 
 
   private async validateCategory(ids: number[]): Promise<null |ServiceCategory[]> {
-    const categoryRepository = AppDataSource.getRepository(ServiceCategory);
     const categoryArray = [] as ServiceCategory[];
 
     for(let index = 0 ; index < ids.length; index += 1) {
       const id = ids[index];
-      const category = await categoryRepository.findOneBy({ id });
+      const category = await serviceCategoryRepository.findOneBy({ id });
 
       if(!category) return null;
       categoryArray.push(category);
@@ -68,18 +50,15 @@ class ServiceOrderServ {
 
 
   private async validateSingleCategory(id: number): Promise<ServiceCategory | null> {
-    const categoryRepository = AppDataSource.getRepository(ServiceCategory);
-    const category = await categoryRepository.findOneBy({id});
+    const category = await serviceCategoryRepository.findOneBy({id});
 
     if(!category) return null;
     
     return category;
   }
 
-
   private async validateStatus(id: number): Promise<null | ServiceStatus> {
-    const statusRepository = AppDataSource.getRepository(ServiceStatus);
-    const status = await statusRepository.findOneBy({ id });
+    const status = await serviceStatusRepository.findOneBy({ id });
 
     if(!status) return null;
     return status;
@@ -92,7 +71,7 @@ class ServiceOrderServ {
         (serviceOrder as any)[key] = value
       };
       
-      await OSRepository.save(serviceOrder);
+      await serviceOrderRepository.save(serviceOrder);
       return serviceOrder;
     } catch (error) {
       return null;
@@ -114,7 +93,7 @@ class ServiceOrderServ {
     serviceOrder.status = status;
     serviceOrder.costCenter = costCenter;
     serviceOrder.chargedValue = data.chargedValue;
-    if(data.comments) serviceOrder.comments = data.comments;
+    serviceOrder.comments = null;
     serviceOrder.description = data.description;
     serviceOrder.identifier = data.identifier;
     serviceOrder.exectutionValue = data.exectionValue;
@@ -122,19 +101,31 @@ class ServiceOrderServ {
 
 
     serviceOrder.creationDate = DateActions.getDateAsString();
-    await OSRepository.save(serviceOrder);
+    await serviceOrderRepository.save(serviceOrder);
     return serviceOrder;
   };
 
 
-  public async getAll(): Promise<ServiceOrder[]> {
-    const allServiceOrders = await OSRepository.find({ relations: ['costCenter', 'status', 'category']});
+  public async getAll(token: string): Promise<ServiceOrder[] | null> {
+    const { data } = JwtActions.authenticateUser(token);
+    if(!data) return null;
+
+    if(data.role !== 'admin') {
+
+      const allServiceOrders = await serviceOrderRepository.find({
+        where: { costCenter: In(data.costCenter)},
+        relations: ['costCenter', 'status', 'category']
+      });
+        return allServiceOrders;
+      };
+
+    const allServiceOrders = await serviceOrderRepository.find({ relations: ['costCenter', 'status', 'category']});
     return allServiceOrders;
   };
 
 
   public async getById(id: number): Promise<ServiceOrder | null> {
-    const serviceOrder = await OSRepository.findOne({ where: { id }, relations: ['costCenter', 'status', 'category']});
+    const serviceOrder = await serviceOrderRepository.findOne({ where: { id }, relations: ['costCenter', 'status', 'category']});
     if(!serviceOrder) return null;
 
     return serviceOrder;
@@ -149,6 +140,7 @@ class ServiceOrderServ {
     return updatedData;
   };
 
+
   public async updateStatus(id: number, newStatusId: number): Promise<ServiceOrder | null> {
     const serviceOrder = await this.validateServiceOrder(id);
     const newStatus = await this.validateStatus(newStatusId);
@@ -156,7 +148,7 @@ class ServiceOrderServ {
     if(!serviceOrder || !newStatus) return null;
 
     serviceOrder.status = newStatus;
-    await OSRepository.save(serviceOrder);
+    await serviceOrderRepository.save(serviceOrder);
     return serviceOrder;
   };
 
@@ -168,7 +160,7 @@ class ServiceOrderServ {
     if(!serviceOrder || !newCategory) return null;
 
     serviceOrder.category?.push(newCategory);
-    await OSRepository.save(serviceOrder);
+    await serviceOrderRepository.save(serviceOrder);
     return serviceOrder;
   };
 
@@ -181,7 +173,7 @@ class ServiceOrderServ {
 
     const index = serviceOrder.category?.indexOf(category);
     if(index) serviceOrder.category?.splice(index, 1);
-    await OSRepository.save(serviceOrder);
+    await serviceOrderRepository.save(serviceOrder);
     return serviceOrder;
   };
 
@@ -193,7 +185,7 @@ class ServiceOrderServ {
     if(!serviceOrder || !costCenter) return null;
 
     serviceOrder.costCenter = costCenter;
-    await OSRepository.save(serviceOrder);
+    await serviceOrderRepository.save(serviceOrder);
     return serviceOrder;
   };
 
@@ -201,7 +193,7 @@ class ServiceOrderServ {
   public async delete(id: number): Promise<Boolean> {
     const serviceOrder = await this.validateServiceOrder(id);
     if(!serviceOrder) return false;
-    await OSRepository.delete({ id });
+    await serviceOrderRepository.delete({ id });
     return true;
   };
 };

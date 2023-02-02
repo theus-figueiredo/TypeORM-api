@@ -140,22 +140,6 @@ class ContractService {
     return contract;
   };
 
-
-  public async removeContractType(id: number, token: string): Promise <Contract | null>
-  {
-    const canProceed = this.validatePermission(token);
-    if(!canProceed) return null;
-
-    const contract = await this.validateContract(id);
-    if(!contract) return null;
-
-    contract.contractType = null;
-
-    await contractRepository.save(contract);
-    return contract;
-  };
-
-
   public async deleteContract(id: number, token: string): Promise<boolean>
   {
     const canProceed = this.validatePermission(token);

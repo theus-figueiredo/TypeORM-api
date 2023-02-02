@@ -1,5 +1,6 @@
 import express from 'express';
 import { AppDataSource } from "../database/data-source";
+import cors from 'cors';
 import {
   RoleRoute,
   ContractTypeRoute,
@@ -10,7 +11,12 @@ import {
   ServiceCategoryRoute,
   ServiceOrderRoute,
   LoginRoute,
+  CommentRoute,
 } from '../routes';
+
+const options: cors.CorsOptions = {
+  origin: ['http://localhost:3000']
+};
 
 class App {
   public express: express.Application;
@@ -24,6 +30,7 @@ class App {
 
   private middlewares() {
     this.express.use(express.json());
+    this.express.use(cors(options));
   };
 
   private routes() {
@@ -36,6 +43,7 @@ class App {
     this.express.use('/service-status', ServiceStatusRoute);
     this.express.use('/service-order', ServiceOrderRoute);
     this.express.use('/login', LoginRoute);
+    this.express.use('/comments', CommentRoute);
   };
 
   private async database() {

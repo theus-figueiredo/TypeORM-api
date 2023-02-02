@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinColumn, JoinTab
 import { CostCenter } from './CostCenter';
 import { ServiceCategory } from './ServiceCategorie';
 import { ServiceStatus } from './ServiceStatus';
+import { Comment } from './Comments';
 
 @Entity()
 export class ServiceOrder {
@@ -27,8 +28,9 @@ export class ServiceOrder {
   @Column({ type: 'decimal', nullable: true })
   chargedValue: number | null;
 
-  @Column({ type: 'text', nullable: true })
-  comments: String | null;
+  @OneToMany(() => Comment, (comment) => comment.serviceOrder, { nullable: true })
+  @JoinColumn()
+  comments: Comment[] | null;
 
   @ManyToOne(() => CostCenter, (costCenter) => costCenter.serviceOrder, { nullable: true })
   @JoinColumn()
