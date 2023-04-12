@@ -1,4 +1,4 @@
-# Backend projeto controle global
+# Backend para controle de serviços usando typeorm
 
 Projeto sendo construído com TypeScript e TypeORM
 
