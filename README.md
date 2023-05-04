@@ -3,4 +3,4 @@
 Projeto sendo construído com TypeScript e TypeORM
 
 
-:warning: Projeto parado por conta de problemas com o TypeORM
+:warning: Projeto parado por conta de problemas com o sistema de migrations do TypeORM
